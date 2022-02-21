@@ -11,6 +11,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.emst.Fudocs.filter.CustomAuthorizationFilter;
+import com.emst.Fudocs.filter.CustomeAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -31,14 +35,17 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter{
 	
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
+		CustomeAuthenticationFilter customeAuthenticationFilter = new CustomeAuthenticationFilter(authenticationManagerBean());
+		customeAuthenticationFilter.setFilterProcessesUrl("/loginapi/login");
 		http.csrf().disable();
 		http.cors().and().csrf().disable();
-		http.authorizeHttpRequests().antMatchers("/loginapi/login/")
-		.hasAnyRole("USER","ADMIN").and().httpBasic();
-		http.authorizeRequests().antMatchers("/academicYearMaster/getAcademicYear")
-		.hasAnyRole("USER","ADMIN")
-		.and().httpBasic();;
+		
+		http.authorizeHttpRequests().antMatchers("/loginapi/login/").permitAll();
+		http.authorizeRequests().antMatchers(HttpMethod.GET,"/academicYearMaster/getAcademicYear")
+		.hasAnyAuthority("USER","ADMIN");
 		http.authorizeHttpRequests().anyRequest().authenticated();
+		http.addFilter(customeAuthenticationFilter);
+		http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 
 
