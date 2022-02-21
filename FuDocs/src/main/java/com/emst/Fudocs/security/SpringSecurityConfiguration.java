@@ -41,8 +41,11 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter{
 		http.cors().and().csrf().disable();
 		
 		http.authorizeHttpRequests().antMatchers("/loginapi/login/").permitAll();
-		http.authorizeRequests().antMatchers(HttpMethod.GET,"/academicYearMaster/getAcademicYear")
-		.hasAnyAuthority("USER","ADMIN");
+		http.authorizeRequests().antMatchers("/academicYearMaster/**")
+		.hasAnyAuthority("ADMIN");
+		http.authorizeRequests().antMatchers(HttpMethod.GET,"/academicYearMaster/**")
+		.hasAnyAuthority("ADMIN");
+		
 		http.authorizeHttpRequests().anyRequest().authenticated();
 		http.addFilter(customeAuthenticationFilter);
 		http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);

@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.emst.Fudocs.dto.AcademicYearDTO;
@@ -53,7 +54,7 @@ public class MasterServiceImpl implements MasterService {
 		List<AcademicYear> acyearList=new ArrayList();
 		List<AcademicYearDTO> dtoList=new ArrayList();
 		try {
-			acyearList=masterRepo.findAll();
+			acyearList=masterRepo.findAll(Sort.by(Sort.Direction.ASC, "year"));
 			//BeanUtils.copyProperties(acyearList, dtoList);
 			/*
 			 * acyearList.forEach(obj ->{ AcademicYearDTO newobj=new AcademicYearDTO();
