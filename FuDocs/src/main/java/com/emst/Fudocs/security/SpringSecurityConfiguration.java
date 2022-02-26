@@ -43,8 +43,10 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter{
 		http.authorizeHttpRequests().antMatchers("/loginapi/login/").permitAll();
 		http.authorizeRequests().antMatchers("/academicYearMaster/**")
 		.hasAnyAuthority("ADMIN");
-		http.authorizeRequests().antMatchers(HttpMethod.GET,"/academicYearMaster/**")
+		http.authorizeRequests().antMatchers("/academicYearMaster/**")
 		.hasAnyAuthority("ADMIN");
+		http.authorizeRequests().antMatchers("/criteria1/**")
+		.hasAnyAuthority("ADMIN","USER");
 		
 		http.authorizeHttpRequests().anyRequest().authenticated();
 		http.addFilter(customeAuthenticationFilter);
